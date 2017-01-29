@@ -1,0 +1,53 @@
+{
+  "project_info": {
+    "project_number": "924027928305",
+    "firebase_url": "https://pushchat-aec26.firebaseio.com",
+    "project_id": "pushchat-aec26",
+    "storage_bucket": "pushchat-aec26.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:924027928305:android:6fa6b4cd6dab9499",
+        "android_client_info": {
+          "package_name": "vmpay.com.firechat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "924027928305-0887m9o67k2rh282lmsvvfijkiipdk13.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "vmpay.com.firechat",
+            "certificate_hash": "27E745D8C9109061A664531F45FCE5B8540C7C4A"
+          }
+        },
+        {
+          "client_id": "924027928305-ptc4gjfs1nnbjikcogmm3c9l5ctrhg6p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+	{ "current_key": "" } 
+	],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "924027928305-ptc4gjfs1nnbjikcogmm3c9l5ctrhg6p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
