@@ -28,8 +28,10 @@
         }
       ],
       "api_key": [
-	{ "current_key": "" } 
-	],
+        {
+          "current_key": "AIzaSyDJh2B6jOp06QSRFpalDAPWKbUNGbCxnxE"
+        }
+      ],
       "services": {
         "analytics_service": {
           "status": 1

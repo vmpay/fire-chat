@@ -1,5 +1,7 @@
 package vmpay.com.firechat;
 
+import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,96 +10,109 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class AuthActivity extends AppCompatActivity
+public class AuthActivity extends AppCompatActivity implements  GoogleApiClient.OnConnectionFailedListener, View.OnClickListener
 {
 
-//	@Override
-//	protected void onCreate(Bundle savedInstanceState)
-//	{
-//		super.onCreate(savedInstanceState);
-//		setContentView(R.layout.activity_auth);
-//	}
-	private DatabaseReference mSimpleFirechatDatabaseReference;
-	private FirebaseRecyclerAdapter<ChatMessage, FirechatMsgViewHolder>
-			mFirebaseAdapter;
-	private RecyclerView mMessageRecyclerView;
-	private LinearLayoutManager mLinearLayoutManager;
-	private ProgressBar mProgressBar;
+	private static final int RC_SIGN_IN = 9001;
+	private SignInButton mAuthButton;
+	private FirebaseAuth mFirebaseAuth;
+	private GoogleApiClient mGoogleApiClient;
 
-	public static class FirechatMsgViewHolder extends RecyclerView.ViewHolder {
-		public TextView msgTextView;
-		public TextView userTextView;
-		public CircleImageView userImageView;
-
-		public FirechatMsgViewHolder(View v) {
-			super(v);
-			msgTextView = (TextView) itemView.findViewById(R.id.msgTextView);
-			userTextView = (TextView) itemView.findViewById(R.id.userTextView);
-			userImageView = (CircleImageView) itemView.findViewById(R.id.userImageView);
-		}
-	}
+	// Firebase instance variables
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_auth);
 
-		mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
-		mMessageRecyclerView = (RecyclerView) findViewById(R.id.messageRecyclerView);
-		mLinearLayoutManager = new LinearLayoutManager(this);
-		mLinearLayoutManager.setStackFromEnd(true);
-		mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
+		mAuthButton = (SignInButton) findViewById(R.id.auth_button);
+		mAuthButton.setOnClickListener(this);
 
-		mSimpleFirechatDatabaseReference = FirebaseDatabase.getInstance().getReference();
-		mFirebaseAdapter = new FirebaseRecyclerAdapter<ChatMessage,
-				FirechatMsgViewHolder>(
-				ChatMessage.class,
-				R.layout.chat_message,
-				FirechatMsgViewHolder.class,
-				mSimpleFirechatDatabaseReference.child("messages")) {
+		mFirebaseAuth = FirebaseAuth.getInstance();
 
-			@Override
-			protected void populateViewHolder(FirechatMsgViewHolder viewHolder, ChatMessage friendlyMessage, int position) {
-				mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-				viewHolder.msgTextView.setText(friendlyMessage.getText());
-				viewHolder.userTextView.setText(friendlyMessage.getName());
-				if (friendlyMessage.getPhotoUrl() == null) {
-					viewHolder.userImageView
-							.setImageDrawable(ContextCompat
-									.getDrawable(AuthActivity.this,
-											R.drawable.ic_account_circle_black_36dp));
-				} else {
-					Glide.with(AuthActivity.this)
-							.load(friendlyMessage.getPhotoUrl())
-							.into(viewHolder.userImageView);
-				}
-			}
-		};
+		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+				.requestIdToken("924027928305-ptc4gjfs1nnbjikcogmm3c9l5ctrhg6p.apps.googleusercontent.com")
+				.requestEmail()
+				.build();
+		mGoogleApiClient = new GoogleApiClient.Builder(this)
+				.enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+				.addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+				.build();
 
-		mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-			@Override
-			public void onItemRangeInserted(int positionStart, int itemCount) {
-				super.onItemRangeInserted(positionStart, itemCount);
-				int chatMessageCount = mFirebaseAdapter.getItemCount();
-				int lastVisiblePosition =
-						mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
-				if (lastVisiblePosition == -1 ||
-						(positionStart >= (chatMessageCount - 1) &&
-								lastVisiblePosition == (positionStart - 1))) {
-					mMessageRecyclerView.scrollToPosition(positionStart);
-				}
-			}
-		});
-
-		mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
-		mMessageRecyclerView.setAdapter(mFirebaseAdapter);
 	}
 
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+			case R.id.auth_button:
+				Authorize();
+				break;
+		}
+	}
+
+	private void Authorize() {
+		Intent authorizeIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+		startActivityForResult(authorizeIntent, RC_SIGN_IN);
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (requestCode == RC_SIGN_IN) {
+			GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+			if (result.isSuccess()) {
+				GoogleSignInAccount account = result.getSignInAccount();
+				firebaseAuthWithGoogle(account);
+			} else {
+				// Google Sign In failed
+			}
+		}
+	}
+
+	private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+		AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+		mFirebaseAuth.signInWithCredential(credential)
+				.addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+					@Override
+					public void onComplete(@NonNull Task<AuthResult> task) {
+						// If sign in fails, display a message to the user. If sign in succeeds
+						// the auth state listener will be notified and logic to handle the
+						// signed in user can be handled in the listener.
+						if (!task.isSuccessful()) {
+							Toast.makeText(AuthActivity.this, "Authentication failed.",
+									Toast.LENGTH_SHORT).show();
+						} else {
+							startActivity(new Intent(AuthActivity.this, MainActivity.class));
+							finish();
+						}
+					}
+				});
+	}
+
+	@Override
+	public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+		Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
+	}
 }
