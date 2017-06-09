@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "924027928305-0887m9o67k2rh282lmsvvfijkiipdk13.apps.googleusercontent.com",
+          "client_id": "924027928305-cc5anfc78j2avv9kv1idd1lkhpo04bgv.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "vmpay.com.firechat",
-            "certificate_hash": "27E745D8C9109061A664531F45FCE5B8540C7C4A"
+            "certificate_hash": "2CAAF3A74C6E3A23D6AC65027AA93E46BD13E811"
           }
         },
         {
@@ -28,8 +28,10 @@
         }
       ],
       "api_key": [
-	{ "current_key": "" } 
-	],
+        {
+          "current_key": "AIzaSyAj91QUdLpisponW5PQ9BXnVsmu1UTynzk"
+        }
+      ],
       "services": {
         "analytics_service": {
           "status": 1
