@@ -1,4 +1,4 @@
-package vmpay.com.firechat;
+package vmpay.com.firechat.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,6 +20,8 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
+
+import vmpay.com.firechat.R;
 
 public class AuthActivity extends AppCompatActivity implements
 		GoogleApiClient.OnConnectionFailedListener, View.OnClickListener

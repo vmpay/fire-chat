@@ -1,4 +1,4 @@
-package vmpay.com.firechat;
+package vmpay.com.firechat.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,6 +28,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import vmpay.com.firechat.ChatMessage;
+import vmpay.com.firechat.R;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener
 {
@@ -119,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 				ChatMessage.class,
 				R.layout.chat_message,
 				MainActivity.FirechatMsgViewHolder.class,
-				mSimpleFirechatDatabaseReference.child("messages"))
+				mSimpleFirechatDatabaseReference.child("rooms/general"))
 		{
 
 			@Override
@@ -184,12 +186,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
 	private void sendMessage()
 	{
-		ChatMessage friendlyMessage = new
+		ChatMessage chatMessage = new
 				ChatMessage(mMsgEditText.getText().toString(),
 				mUsername,
 				mPhotoUrl);
-		mSimpleFirechatDatabaseReference.child("messages")
-				.push().setValue(friendlyMessage);
+		mSimpleFirechatDatabaseReference.child("rooms/general")
+				.push().setValue(chatMessage);
 		mMsgEditText.setText("");
 	}
 
