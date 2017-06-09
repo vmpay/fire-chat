@@ -25,25 +25,26 @@
 		android:layout_alignParentStart="true"
 		android:orientation="horizontal">
 
-		<EditText
-			android:id="@+id/msgEditText"
+		<android.support.design.widget.TextInputLayout
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center_vertical"
-			android:layout_weight="1"/>
+			android:layout_weight="1">
 
-		<Button
-			android:id="@+id/sendButton"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_gravity="bottom"
-			android:enabled="true"
-			android:text="SEND"
-			android:visibility="gone"/>
+			<EditText
+				android:id="@+id/msgEditText"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:hint="@string/your_message"
+				android:imeActionId="@+id/send"
+				android:imeOptions="actionSend"
+				android:inputType="text"
+				android:maxLines="1"/>
+
+		</android.support.design.widget.TextInputLayout>
 
 		<android.support.design.widget.FloatingActionButton
 			android:id="@+id/fab"
-
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_gravity="end|bottom"

@@ -8,8 +8,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -65,19 +67,27 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 		mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
 
 		mMsgEditText = (EditText) findViewById(R.id.msgEditText);
+		mMsgEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
+		{
+			@Override
+			public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent)
+			{
+				boolean handled = false;
+				if(actionId == EditorInfo.IME_ACTION_SEND)
+				{
+					handled = true;
+					sendMessage();
+				}
+				return handled;
+			}
+		});
 		mSendButton = (FloatingActionButton) findViewById(R.id.fab);
 		mSendButton.setOnClickListener(new View.OnClickListener()
 		{
 			@Override
 			public void onClick(View view)
 			{
-				ChatMessage friendlyMessage = new
-						ChatMessage(mMsgEditText.getText().toString(),
-						mUsername,
-						mPhotoUrl);
-				mSimpleFirechatDatabaseReference.child("messages")
-						.push().setValue(friendlyMessage);
-				mMsgEditText.setText("");
+				sendMessage();
 			}
 		});
 
@@ -170,6 +180,17 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+	private void sendMessage()
+	{
+		ChatMessage friendlyMessage = new
+				ChatMessage(mMsgEditText.getText().toString(),
+				mUsername,
+				mPhotoUrl);
+		mSimpleFirechatDatabaseReference.child("messages")
+				.push().setValue(friendlyMessage);
+		mMsgEditText.setText("");
 	}
 
 	public static class FirechatMsgViewHolder extends RecyclerView.ViewHolder
