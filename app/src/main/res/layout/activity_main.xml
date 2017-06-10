@@ -8,7 +8,7 @@
 	android:paddingLeft="@dimen/activity_horizontal_margin"
 	android:paddingRight="@dimen/activity_horizontal_margin"
 	android:paddingTop="@dimen/activity_vertical_margin"
-	tools:context="vmpay.com.firechat.">
+	tools:context="vmpay.com.firechat.activities.AuthActivity">
 
 	<android.support.v7.widget.RecyclerView
 		android:id="@+id/messageRecyclerView"
@@ -25,21 +25,34 @@
 		android:layout_alignParentStart="true"
 		android:orientation="horizontal">
 
-		<EditText
-			android:id="@+id/msgEditText"
+		<android.support.design.widget.TextInputLayout
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center_vertical"
-			android:layout_weight="1"/>
+			android:layout_weight="1">
 
-		<Button
-			android:id="@+id/sendButton"
+			<EditText
+				android:id="@+id/msgEditText"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:hint="@string/your_message"
+				android:imeActionId="@+id/send"
+				android:imeOptions="actionSend"
+				android:inputType="text"
+				android:maxLines="1"/>
+
+		</android.support.design.widget.TextInputLayout>
+
+		<android.support.design.widget.FloatingActionButton
+			android:id="@+id/fab"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_gravity="bottom"
-			android:enabled="false"
-			android:text="SEND"/>
+			android:layout_gravity="end|bottom"
+			android:layout_margin="16dp"
+			android:src="@drawable/ic_send"/>
+
 	</LinearLayout>
+
 	<ProgressBar
 		android:id="@+id/progressBar"
 		style="?android:attr/progressBarStyleLarge"

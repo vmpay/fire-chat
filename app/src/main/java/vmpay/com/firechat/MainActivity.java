@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 	private RecyclerView mMessageRecyclerView;
 	private LinearLayoutManager mLinearLayoutManager;
 	private ProgressBar mProgressBar;
-	private Button mSendButton;
+	private FloatingActionButton mSendButton;
 	private EditText mMsgEditText;
 	private String mUsername;
 	private String mPhotoUrl;
@@ -150,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 		mLinearLayoutManager.setStackFromEnd(true);
 		mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-		mSendButton = (Button) findViewById(R.id.sendButton);
+		mSendButton = (FloatingActionButton) findViewById(R.id.fab);
 		mSendButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {

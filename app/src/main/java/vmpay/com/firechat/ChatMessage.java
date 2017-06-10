@@ -1,7 +1,11 @@
 package vmpay.com.firechat;
 
 /**
+<<<<<<< HEAD
  * Created by Andrew on 30/01/2017.
+=======
+ * Created by andrew on 1/30/17.
+>>>>>>> feature-material_design
  */
 
 public class ChatMessage
@@ -10,36 +14,44 @@ public class ChatMessage
 	private String name;
 	private String photoUrl;
 
-	public ChatMessage() {
+	public ChatMessage()
+	{
 	}
 
-	public ChatMessage(String text, String name, String photoUrl) {
+	public ChatMessage(String text, String name, String photoUrl)
+	{
 		this.text = text;
 		this.name = name;
 		this.photoUrl = photoUrl;
 	}
 
-	public String getText() {
+	public String getText()
+	{
 		return text;
 	}
 
-	public void setText(String text) {
+	public void setText(String text)
+	{
 		this.text = text;
 	}
 
-	public String getName() {
+	public String getName()
+	{
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(String name)
+	{
 		this.name = name;
 	}
 
-	public String getPhotoUrl() {
+	public String getPhotoUrl()
+	{
 		return photoUrl;
 	}
 
-	public void setPhotoUrl(String photoUrl) {
+	public void setPhotoUrl(String photoUrl)
+	{
 		this.photoUrl = photoUrl;
 	}
 }
