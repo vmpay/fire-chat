@@ -4,9 +4,9 @@ android {
     signingConfigs {
         config {
             keyAlias 'FireChatDebug'
-            keyPassword '1234567890'
-            storeFile file('../../andrewprivatekeystore_0.jks')
-            storePassword '1234567890'
+            keyPassword 'andrew12#$'
+            storeFile file('../../andrewprivatekeystore.jks')
+            storePassword 'AndrewKeyStore12#$'
         }
     }
 
