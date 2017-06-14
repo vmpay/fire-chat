@@ -1,4 +1,4 @@
-package vmpay.com.firechat.activities;
+package vmpay.com.firechat.activities.main;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,6 +30,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import de.hdodenhof.circleimageview.CircleImageView;
 import vmpay.com.firechat.ChatMessage;
 import vmpay.com.firechat.R;
+import vmpay.com.firechat.activities.auth.AuthActivity;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener
 {

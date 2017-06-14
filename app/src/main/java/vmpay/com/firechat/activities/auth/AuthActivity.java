@@ -1,8 +1,10 @@
-package vmpay.com.firechat.activities;
+package vmpay.com.firechat.activities.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
@@ -22,14 +24,21 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 import vmpay.com.firechat.R;
+import vmpay.com.firechat.activities.auth.fragments.LoginFragment;
+import vmpay.com.firechat.activities.main.MainActivity;
+import vmpay.com.firechat.controller.AppController;
+import vmpay.com.firechat.presenters.UserLoginPresenter;
 
-public class AuthActivity extends AppCompatActivity implements
-		GoogleApiClient.OnConnectionFailedListener, View.OnClickListener
+public class AuthActivity extends AppCompatActivity
+//		implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener
 {
 	private static final int RC_SIGN_IN = 9001;
 	private SignInButton mAuthButton;
 	private FirebaseAuth mFirebaseAuth;
 	private GoogleApiClient mGoogleApiClient;
+
+	private AppController appController = AppController.getInstance();
+	private UserLoginPresenter userLoginPresenter;
 
 	// Firebase instance variables
 
@@ -38,32 +47,43 @@ public class AuthActivity extends AppCompatActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_auth);
 
-		mAuthButton = (SignInButton) findViewById(R.id.auth_button);
-		mAuthButton.setOnClickListener(this);
+		appController.setUp(this);
 
-		mFirebaseAuth = FirebaseAuth.getInstance();
-
-		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-				.requestIdToken("924027928305-ptc4gjfs1nnbjikcogmm3c9l5ctrhg6p.apps.googleusercontent.com")
-				.requestEmail()
-				.build();
-		mGoogleApiClient = new GoogleApiClient.Builder(this)
-				.enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
-				.addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-				.build();
-
-	}
-
-	@Override
-	public void onClick(View v)
-	{
-		switch(v.getId())
+		if(userLoginPresenter == null)
 		{
-			case R.id.auth_button:
-				Authorize();
-				break;
+			userLoginPresenter = appController.getUserLoginPresenter();
 		}
+
+		FragmentManager fragmentTransaction = getSupportFragmentManager();
+		fragmentTransaction.beginTransaction().replace(R.id.llRoot, new LoginFragment(), "LoginFragment").commit();
+
+
+//		mAuthButton = (SignInButton) findViewById(R.id.auth_button);
+//		mAuthButton.setOnClickListener(this);
+//
+//		mFirebaseAuth = FirebaseAuth.getInstance();
+//
+//		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//				.requestIdToken("924027928305-ptc4gjfs1nnbjikcogmm3c9l5ctrhg6p.apps.googleusercontent.com")
+//				.requestEmail()
+//				.build();
+//		mGoogleApiClient = new GoogleApiClient.Builder(this)
+//				.enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+//				.addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+//				.build();
+
 	}
+
+//	@Override
+//	public void onClick(View v)
+//	{
+//		switch(v.getId())
+//		{
+//			case R.id.auth_button:
+//				Authorize();
+//				break;
+//		}
+//	}
 
 	private void Authorize()
 	{
@@ -74,23 +94,25 @@ public class AuthActivity extends AppCompatActivity implements
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
+		userLoginPresenter.onActivityResult(requestCode, resultCode, data);
+
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if(requestCode == RC_SIGN_IN)
-		{
-			GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-			if(result.isSuccess())
-			{
-				GoogleSignInAccount account = result.getSignInAccount();
-				firebaseAuthWithGoogle(account);
-			}
-			else
-			{
-				// Google Sign In failed
-				Toast.makeText(AuthActivity.this, "Google Authentication failed.",
-						Toast.LENGTH_SHORT).show();
-			}
-		}
+//		if(requestCode == RC_SIGN_IN)
+//		{
+//			GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+//			if(result.isSuccess())
+//			{
+//				GoogleSignInAccount account = result.getSignInAccount();
+//				firebaseAuthWithGoogle(account);
+//			}
+//			else
+//			{
+//				// Google Sign In failed
+//				Toast.makeText(AuthActivity.this, "Google Authentication failed.",
+//						Toast.LENGTH_SHORT).show();
+//			}
+//		}
 	}
 
 	private void firebaseAuthWithGoogle(GoogleSignInAccount acct)
@@ -119,9 +141,9 @@ public class AuthActivity extends AppCompatActivity implements
 				});
 	}
 
-	@Override
-	public void onConnectionFailed(@NonNull ConnectionResult connectionResult)
-	{
-		Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
-	}
+//	@Override
+//	public void onConnectionFailed(@NonNull ConnectionResult connectionResult)
+//	{
+//		Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
+//	}
 }
